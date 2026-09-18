@@ -1,0 +1,1514 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tech Fundamentals Assessment</title>
+    <style>
+      :root {
+        --bg: #14161a;
+        --panel: #1c1f25;
+        --panel-2: #23272f;
+        --line: #2e333c;
+        --ink: #eceef1;
+        --ink-dim: #9aa1ac;
+        --amber: #e0a94a;
+        --amber-dim: #7a5f2c;
+        --green: #4caf82;
+        --red: #d9634f;
+        --focus: #6f9bd6;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Iowan Old Style", "Georgia", "Times New Roman", serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .mono {
+        font-family:
+          "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      }
+
+      #app {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ---------- Intro screen ---------- */
+      /* New Lin */
+      .intro-wrap {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 32px 20px;
+      }
+      .intro-card {
+        max-width: 560px;
+        width: 100%;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 44px 40px;
+      }
+      .intro-kicker {
+        color: var(--amber);
+        font-family: "SFMono-Regular", Consolas, monospace;
+        font-size: 12.5px;
+        letter-spacing: 0.04em;
+        margin-bottom: 14px;
+      }
+      .intro-card h1 {
+        font-size: 30px;
+        line-height: 1.25;
+        margin: 0 0 18px 0;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+      .intro-card p {
+        color: var(--ink-dim);
+        line-height: 1.65;
+        font-size: 15.5px;
+        margin: 0 0 22px 0;
+      }
+      .intro-facts {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1px;
+        background: var(--line);
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 28px;
+      }
+      .intro-fact {
+        background: var(--panel-2);
+        padding: 16px 14px;
+        text-align: center;
+      }
+      .intro-fact .num {
+        font-family: "SFMono-Regular", Consolas, monospace;
+        font-size: 22px;
+        color: var(--ink);
+        display: block;
+        margin-bottom: 4px;
+      }
+      .intro-fact .lbl {
+        font-size: 12px;
+        color: var(--ink-dim);
+      }
+      .btn {
+        font-family: inherit;
+        font-size: 15px;
+        border-radius: 4px;
+        padding: 13px 26px;
+        border: 1px solid transparent;
+        cursor: pointer;
+        transition:
+          background 0.15s ease,
+          border-color 0.15s ease,
+          opacity 0.15s ease;
+      }
+      .btn:focus-visible {
+        outline: 2px solid var(--focus);
+        outline-offset: 2px;
+      }
+      .btn-primary {
+        background: var(--amber);
+        color: #1b1508;
+        font-weight: 600;
+        width: 100%;
+      }
+      .btn-primary:hover {
+        background: #ecb75d;
+      }
+      .btn-secondary {
+        background: transparent;
+        color: var(--ink);
+        border-color: var(--line);
+      }
+      .btn-secondary:hover {
+        border-color: var(--ink-dim);
+      }
+      .btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      /* ---------- Quiz screen ---------- */
+      .topbar {
+        border-bottom: 1px solid var(--line);
+        background: var(--panel);
+        padding: 14px 28px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+      }
+      .brand {
+        font-size: 14px;
+        color: var(--ink-dim);
+        font-family: "SFMono-Regular", Consolas, monospace;
+      }
+      .timer {
+        font-family: "SFMono-Regular", Consolas, monospace;
+        font-size: 19px;
+        padding: 5px 12px;
+        border-radius: 4px;
+        border: 1px solid var(--line);
+        color: var(--ink);
+        min-width: 78px;
+        text-align: center;
+      }
+      .timer.warn {
+        color: var(--red);
+        border-color: var(--red);
+      }
+
+      .progress-track {
+        flex: 1;
+        min-width: 120px;
+        height: 5px;
+        background: var(--line);
+        border-radius: 3px;
+        overflow: hidden;
+        margin: 0 8px;
+      }
+      .progress-fill {
+        height: 100%;
+        background: var(--amber);
+        transition: width 0.35s ease;
+      }
+
+      .qcount {
+        font-family: "SFMono-Regular", Consolas, monospace;
+        font-size: 13.5px;
+        color: var(--ink-dim);
+        white-space: nowrap;
+      }
+
+      .main {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        padding: 40px 20px 24px;
+      }
+      .quiz-col {
+        width: 100%;
+        max-width: 720px;
+        display: flex;
+        flex-direction: column;
+      }
+      .qlabel {
+        font-family: "SFMono-Regular", Consolas, monospace;
+        color: var(--amber);
+        font-size: 13px;
+        letter-spacing: 0.02em;
+        margin-bottom: 14px;
+      }
+      .qtext {
+        font-size: 23px;
+        line-height: 1.5;
+        font-weight: 600;
+        margin: 0 0 30px 0;
+        letter-spacing: -0.005em;
+      }
+      .options {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 34px;
+      }
+      .option {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        padding: 15px 18px;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 5px;
+        cursor: pointer;
+        transition:
+          border-color 0.12s ease,
+          background 0.12s ease;
+      }
+      .option:hover {
+        border-color: #454b56;
+      }
+      .option.selected {
+        border-color: var(--amber);
+        background: #26221a;
+      }
+      .option input {
+        display: none;
+      }
+      .option-marker {
+        flex-shrink: 0;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 1.5px solid var(--ink-dim);
+        margin-top: 2px;
+        position: relative;
+      }
+      .option.selected .option-marker {
+        border-color: var(--amber);
+      }
+      .option.selected .option-marker::after {
+        content: "";
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--amber);
+      }
+      .option-text {
+        font-size: 15.5px;
+        line-height: 1.5;
+        padding-top: 1px;
+      }
+
+      .nav-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-top: auto;
+      }
+      .nav-row .spacer {
+        flex: 1;
+      }
+      .flag-btn {
+        background: transparent;
+        border: 1px solid var(--line);
+        color: var(--ink-dim);
+        font-size: 13.5px;
+      }
+      .flag-btn.active {
+        color: var(--amber);
+        border-color: var(--amber-dim);
+      }
+
+      /* question palette */
+      .palette-wrap {
+        max-width: 720px;
+        margin: 22px auto 0;
+        width: 100%;
+        padding: 18px 0 0;
+        border-top: 1px solid var(--line);
+      }
+      .palette-title {
+        font-size: 12.5px;
+        color: var(--ink-dim);
+        font-family: "SFMono-Regular", Consolas, monospace;
+        margin-bottom: 10px;
+      }
+      .palette-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+      }
+      .pnode {
+        width: 32px;
+        height: 32px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "SFMono-Regular", Consolas, monospace;
+        font-size: 12.5px;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        color: var(--ink-dim);
+        cursor: pointer;
+      }
+      .pnode.current {
+        border-color: var(--focus);
+        color: var(--ink);
+      }
+      .pnode.answered {
+        background: #213228;
+        border-color: #2f4a3a;
+        color: var(--green);
+      }
+      .pnode.flagged {
+        background: #2c2415;
+        border-color: var(--amber-dim);
+        color: var(--amber);
+      }
+
+      /* ---------- Results screen ---------- */
+      .results-wrap {
+        flex: 1;
+        padding: 36px 20px 60px;
+        display: flex;
+        justify-content: center;
+      }
+      .results-col {
+        max-width: 760px;
+        width: 100%;
+      }
+
+      .score-hero {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        padding: 38px 36px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 28px;
+        flex-wrap: wrap;
+        margin-bottom: 22px;
+      }
+      .score-num {
+        font-family: "SFMono-Regular", Consolas, monospace;
+        font-size: 64px;
+        line-height: 1;
+        color: var(--amber);
+      }
+      .score-num.pass {
+        color: var(--green);
+      }
+      .score-num.fail {
+        color: var(--red);
+      }
+      .score-sub {
+        color: var(--ink-dim);
+        font-size: 14px;
+        margin-top: 8px;
+      }
+      .score-verdict {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+
+      .stat-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1px;
+        background: var(--line);
+        border: 1px solid var(--line);
+        border-radius: 5px;
+        overflow: hidden;
+        margin-bottom: 30px;
+      }
+      .stat {
+        background: var(--panel-2);
+        padding: 18px 14px;
+        text-align: center;
+      }
+      .stat .n {
+        font-family: "SFMono-Regular", Consolas, monospace;
+        font-size: 24px;
+      }
+      .stat .l {
+        font-size: 12px;
+        color: var(--ink-dim);
+        margin-top: 4px;
+      }
+      .stat.correct .n {
+        color: var(--green);
+      }
+      .stat.wrong .n {
+        color: var(--red);
+      }
+      .stat.skipped .n {
+        color: var(--ink-dim);
+      }
+
+      .review-title {
+        font-size: 14px;
+        color: var(--ink-dim);
+        font-family: "SFMono-Regular", Consolas, monospace;
+        margin: 0 0 14px 4px;
+      }
+      .review-item {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 5px;
+        padding: 20px 22px;
+        margin-bottom: 12px;
+      }
+      .review-item.correct {
+        border-left: 3px solid var(--green);
+      }
+      .review-item.wrong {
+        border-left: 3px solid var(--red);
+      }
+      .review-item.skipped {
+        border-left: 3px solid var(--ink-dim);
+      }
+      .review-q {
+        font-size: 15.5px;
+        font-weight: 600;
+        line-height: 1.5;
+        margin-bottom: 12px;
+      }
+      .review-row {
+        display: flex;
+        gap: 8px;
+        font-size: 14px;
+        line-height: 1.5;
+        margin-bottom: 5px;
+      }
+      .review-row .tag {
+        flex-shrink: 0;
+        font-family: "SFMono-Regular", Consolas, monospace;
+        font-size: 11px;
+        padding: 2px 6px;
+        border-radius: 3px;
+        height: fit-content;
+        margin-top: 2px;
+      }
+      .tag.your {
+        background: #332018;
+        color: var(--red);
+      }
+      .tag.correctans {
+        background: #16261d;
+        color: var(--green);
+      }
+      .review-explain {
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px dashed var(--line);
+        font-size: 13.5px;
+        color: var(--ink-dim);
+        line-height: 1.55;
+      }
+
+      .results-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 26px;
+        margin-bottom: 10px;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      @media (max-width: 560px) {
+        .intro-card {
+          padding: 30px 22px;
+        }
+        .intro-card h1 {
+          font-size: 24px;
+        }
+        .intro-facts {
+          grid-template-columns: repeat(3, 1fr);
+        }
+        .qtext {
+          font-size: 19px;
+        }
+        .topbar {
+          padding: 12px 16px;
+        }
+        .score-hero {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .stat-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <!-- INTRO -->
+      <section id="screen-intro" class="intro-wrap">
+        <div class="intro-card">
+          <div class="intro-kicker">TECH FUNDAMENTALS ASSESSMENT</div>
+          <h1>Cloud, networking, OS &amp; DevOps — one question at a time.</h1>
+          <p>
+            Each question carries its own one-minute clock. Answer or skip and
+            move on — once you advance, that question locks. Reaching the end
+            submits automatically, and you can submit early from the review
+            panel at any point.
+          </p>
+          <div class="intro-facts">
+            <div class="intro-fact">
+              <span class="num" id="factCount">—</span
+              ><span class="lbl">questions</span>
+            </div>
+            <div class="intro-fact">
+              <span class="num" id="factTime">—</span
+              ><span class="lbl">total time</span>
+            </div>
+            <div class="intro-fact">
+              <span class="num">1</span><span class="lbl">min / question</span>
+            </div>
+          </div>
+          <button class="btn btn-primary" id="startBtn">
+            Start assessment
+          </button>
+        </div>
+      </section>
+
+      <!-- QUIZ -->
+      <div
+        id="screen-quiz"
+        class="hidden"
+        style="display: flex; flex-direction: column; flex: 1"
+      >
+        <div class="topbar">
+          <div class="topbar-left">
+            <span class="brand">TF-ASSESS</span>
+            <span class="qcount" id="qCounter">Question 1 of 46</span>
+          </div>
+          <div class="progress-track">
+            <div
+              class="progress-fill"
+              id="progressFill"
+              style="width: 0%"
+            ></div>
+          </div>
+          <div class="timer" id="timerDisplay">01:00</div>
+        </div>
+
+        <div class="main">
+          <div class="quiz-col">
+            <div class="qlabel" id="qLabel">QUESTION 01</div>
+            <h2 class="qtext" id="qText">Loading…</h2>
+            <div class="options" id="optionsList"></div>
+
+            <div class="nav-row">
+              <button class="btn flag-btn" id="flagBtn">Mark for review</button>
+              <div class="spacer"></div>
+              <button class="btn btn-secondary" id="prevBtn">Back</button>
+              <button class="btn btn-primary" id="nextBtn" style="width: auto">
+                Next
+              </button>
+            </div>
+
+            <div class="palette-wrap">
+              <div class="palette-title">JUMP TO QUESTION</div>
+              <div class="palette-grid" id="paletteGrid"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESULTS -->
+      <div id="screen-results" class="hidden results-wrap">
+        <div class="results-col">
+          <div class="score-hero">
+            <div>
+              <div class="score-verdict" id="verdictText">—</div>
+              <div class="score-sub" id="scoreSub">—</div>
+            </div>
+            <div style="text-align: right">
+              <div class="score-num" id="scorePct">0%</div>
+            </div>
+          </div>
+
+          <div class="stat-grid">
+            <div class="stat correct">
+              <div class="n" id="statCorrect">0</div>
+              <div class="l">Correct</div>
+            </div>
+            <div class="stat wrong">
+              <div class="n" id="statWrong">0</div>
+              <div class="l">Incorrect</div>
+            </div>
+            <div class="stat skipped">
+              <div class="n" id="statSkipped">0</div>
+              <div class="l">Skipped</div>
+            </div>
+            <div class="stat">
+              <div class="n" id="statTime">0:00</div>
+              <div class="l">Time used</div>
+            </div>
+          </div>
+
+          <div class="review-title">ANSWER REVIEW</div>
+          <div id="reviewList"></div>
+
+          <div class="results-actions">
+            <button class="btn btn-secondary" id="retakeBtn">
+              Retake assessment
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        "use strict";
+
+        const QUESTIONS = [
+          {
+            question:
+              "In a cloud-based application where scalability is crucial, which cloud storage option allows dynamic scaling without the need for manual intervention?",
+            options: [
+              "Block storage",
+              "File storage",
+              "Object storage",
+              "Table storage",
+            ],
+            correct: 2,
+            explanation:
+              "Object storage automatically scales as data grows, making it ideal for highly scalable cloud applications.",
+          },
+          {
+            question:
+              "A mobile application needs to retrieve a list of all available restaurants from a food delivery service’s API. The application should only read data without making any changes to the server resources. Which HTTP method is most appropriate for this operation?",
+            options: ["POST", "PUT", "DELETE", "GET"],
+            correct: 3,
+            explanation:
+              "GET is used to retrieve data from a server without modifying any existing resources.",
+          },
+          {
+            question:
+              "During application development, a developer encounters an error due to an incorrect or unavailable API endpoint, resulting in a “Not Found” response. Which HTTP status code most accurately represents this error?",
+            options: ["404", "500", "403", "400"],
+            correct: 0,
+            explanation:
+              "HTTP 404 is returned when the requested endpoint or resource does not exist on the server.",
+          },
+          {
+            question:
+              "Which protocol is commonly used to secure data in transit over the internet by encrypting communication between systems?",
+            options: ["HTTP", "MTP", "SSL/TLS", "SMTP"],
+            correct: 2,
+            explanation:
+              "TLS (Transport Layer Security) encrypts data during transmission and is the modern, secure standard used for protecting data in transit.",
+          },
+          {
+            question:
+              "As a computer architect designing the control unit of a CPU, you need to specify how data is moved from the accumulator to memory. Which option best describes this operation?",
+            options: [
+              "The process of transferring data from the accumulator to memory is called a register transfer",
+              "The process of transferring data from the accumulator to memory is called a memory read operation",
+              "The process of transferring data from the accumulator to memory is called a memory write operation",
+              "The process of transferring data from the accumulator to memory is called an instruction fetch",
+            ],
+            correct: 2,
+            explanation:
+              "Writing data from a CPU register (accumulator) into memory is classified as a memory write operation.",
+          },
+          {
+            question:
+              "The e-commerce company updates its website weekly by adding new features and fixes. Using an agile development approach, after each update, the new version is automatically deployed to the live environment. The practice involves automating the process of releasing software to production frequently and reliably. Which practice is being implemented?",
+            options: [
+              "Continuous Deployment – automates frequent and reliable releases to production",
+              "Continuous Integration – focuses on merging code changes regularly to prevent integration issues",
+              "Continuous Testing – ensures automated tests are run continually to validate code quality",
+              "Monitoring – tracks application performance and user activity after deployment",
+            ],
+            correct: 0,
+            explanation:
+              "Continuous Deployment automates frequent releases to production, ensuring new updates are delivered reliably without manual intervention.",
+          },
+          {
+            question:
+              "Suppose you want to design a bus system where input-output devices are connected to the computer via wires, and data transfer is handled electronically. The host controller sends the messages to the device controller, which performs the operation. If the device controllers have a built-in cache for faster data transfer, which device will you choose?",
+            options: [
+              "Enhanced Integrated Device Electronics A",
+              "Enhanced Integrated Device Electronics B",
+              "Enhanced Integrated Device Electronics C",
+              "Enhanced Integrated Hard Driver",
+            ],
+            correct: 1,
+            explanation:
+              "EIDE controllers include built-in caching to speed up data transfers between the host and storage devices.",
+          },
+          {
+            question:
+              "Each party encrypts messages before sending them using a shared secret key, and messages are decrypted by the receiving party using the same key. If an attacker can send a specially crafted message to one party and analyze the resulting encrypted output, which technique is most likely to compromise the secret key in this symmetric encryption system?",
+            options: [
+              "Analyzing patterns in intercepted encrypted messages",
+              "Comparing the crafted message’s encrypted output with previously encrypted messages",
+              "Performing a brute-force attack on intercepted messages",
+              "Matching message lengths to guesses the content",
+            ],
+            correct: 1,
+            explanation:
+              "In a symmetric encryption system, a chosen-plaintext attack exploits the encryption of crafted messages to deduce the shared secret key.",
+          },
+          {
+            question:
+              "A software development team is implementing containerization to streamline application deployment by encapsulating applications and their dependencies. Which characteristic defines containers in the context of software development and deployment?",
+            options: [
+              "Virtual machines with a dedicated Hypervisor",
+              "A logical separate network within the server",
+              "Part of the same OS instance as the Hypervisor",
+              "Virtual computers running under a Hypervisor",
+            ],
+            correct: 2,
+            explanation:
+              "Containers run isolated applications within the same OS instance, unlike virtual machines that require a dedicated hypervisor and separate OS.",
+          },
+          {
+            question:
+              "You are building a training module in MS PowerPoint and want to restrict navigation so that users must view each slide sequentially with narration, without freely skipping slides. Which setting provides the strictest control over slide navigation?",
+            options: [
+              "Add hyperlinks between slides",
+              "Use normal Slide Show mode",
+              "Set up Slide Show as _Browsed at a kiosk (full screen)_",
+              "Enable Presenter View",
+            ],
+            correct: 2,
+            explanation:
+              "“Kiosk mode” disables manual slide navigation and forces slides to advance only as designed, providing the strictest control.",
+          },
+          {
+            question:
+              "If a company wants to ensure secure and reliable email transmission for its cloud-based email service, which protocol should they implement?",
+            options: ["HTTP", "FTP", "SMTP", "POP3"],
+            correct: 2,
+            explanation:
+              "SMTP (Simple Mail Transfer Protocol) is the standard protocol used for sending emails reliably between mail servers.",
+          },
+          {
+            question:
+              "To create a document template for repeated use, which file format should you save the document in?",
+            options: [".docx", ".pdf", ".dotx", ".txt"],
+            correct: 2,
+            explanation:
+              "The .dotx format is specifically designed for Word document templates intended for repeated use.",
+          },
+          {
+            question:
+              "An application relies on multiple hardware peripherals and requires strict isolation from other running containers to maintain data integrity and operational security. The development team uses a kernel-level configuration to allocate specific hardware resources to each container and restrict access to non-allocated devices. What is the most critical factor in maintaining operational security and preventing resource contention among containers?",
+            options: [
+              "Ensuring that the host OS scheduler allocates CPU cycles equally to all containers",
+              "Configuring the kernel to enforce strict resource isolation and limit peripheral access to only allocated devices",
+              "Allowing virtualization software to dynamically allocate additional memory as required",
+              "Allowing containers to share network interfaces with individual access control lists",
+            ],
+            correct: 1,
+            explanation:
+              "Strict kernel-level resource isolation prevents unauthorized hardware access and avoids resource contention between containers.",
+          },
+          {
+            question:
+              "Data is transferred between the CPU and a peripheral device through a shared bus controlled by device controllers to improve data transfer speed and reduce latency. The system uses controllers with dedicated high-speed buffers. Which of the following device controllers is most suitable for this purpose?",
+            options: [
+              "Wireless Controller",
+              "USB Controller",
+              "SATA Controller",
+              "Ethernet Controller",
+            ],
+            correct: 2,
+            explanation:
+              "SATA controllers provide high-speed buffered data transfer between storage devices and the CPU, minimizing latency and improving throughput.",
+          },
+          {
+            question:
+              "Hackers attempt to intercept and manipulate data packets traveling across a network by inserting malicious code or routing information, allowing them to redirect traffic through their own system. This enables them to eavesdrop or alter data without detection. What type of attack is this called?",
+            options: [
+              "Packet Sniffing",
+              "IP Spoofing",
+              "Routing Table Poisoning",
+              "DNS Spoofing",
+            ],
+            correct: 2,
+            explanation:
+              "Routing table poisoning redirects network traffic through the attacker’s system, enabling interception or modification of data packets.",
+          },
+          {
+            question:
+              "Question:  \nYou are employed by a company that has recently suffered a security breach. As the IT manager, you are responsible for enhancing the security of the computer's operating system. Which property of an operating system should you prioritize to achieve this goal?",
+            options: [
+              "Access Control",
+              "User Interface",
+              "Multitasking",
+              "Virtual Memory",
+            ],
+            correct: 0,
+            explanation:
+              "Access control manages permissions and restricts unauthorized access, making it critical for operating system security.",
+          },
+          {
+            question:
+              "Jane wants to create a slide that illustrates a progression over\ntime using icons, text, and blanks. She wants it to appear visually\ndynamic without manually animating each step. Which MS PowerPoint\nfeature can help speed up this process?",
+            options: [
+              "Use Slide Zoom feature to create dynamic progression",
+              "Use a SmartArt process layout",
+              "Apply the Morph transition across duplicated slides for a smooth",
+              "Create a custom layout with background images and animation triggers",
+            ],
+            correct: 2,
+            explanation:
+              "The Morph transition automatically animates objects across slides, creating a smooth visual progression without manual animation.",
+          },
+          {
+            question:
+              "A cloud infrastructure requires running multiple isolated\nenvironments on a single physical server. Which technology is\nprimarily used to achieve this?",
+            options: [
+              "Containers",
+              "Virtual Machines (VMs)",
+              "Serverless computing",
+            ],
+            correct: 1,
+            explanation:
+              "Virtual machines provide full isolation for multiple environments on a single physical server, making them ideal for securely running separate workloads.",
+          },
+          {
+            question:
+              "During a context switch, the operating system saves the state of the\ncurrently running process and loads the state of the next process to be\nexecuted. Which CPU register, responsible for holding the address of\nthe next instruction to be fetched, must be saved and restored during\nthis operation?",
+            options: [
+              "Stack Pointer",
+              "General Purpose Register",
+              "Program Counter",
+              "Instruction Register",
+            ],
+            correct: 2,
+            explanation:
+              "The Program Counter stores the address of the next instruction, so saving and restoring it ensures the process resumes correctly after a context switch.",
+          },
+          {
+            question:
+              "Two geographically separate offices, Office A and Office B, need to\nallow all users in Office A to securely access resources in Office B\nand vice versa, as if they were on the same local network. Which VPN\ntopology is most appropriate for this scenario?",
+            options: [
+              "Remote Access VPN",
+              "Site-to-Site VPN",
+              "Client-to-Server VPN",
+              "Peer-to-Peer VPN",
+            ],
+            correct: 1,
+            explanation:
+              "A Site-to-Site VPN connects entire networks across locations, allowing users in both offices to securely access each other's resources as if on the same LAN.",
+          },
+          {
+            question:
+              "A development team is designing a new RESTful API to manage a product\ncatalog for their ecommerce platform. They need to create an endpoint\nthat retrieves details of a specific product using its unique\nproduct ID. Which HTTP method and URL structure best align with RESTful\nprinciples?",
+            options: [
+              "POST /products/{productId}",
+              "GET /products/{productId}",
+              "PUT /products/{productId}",
+              "DELETE /products/{productId}",
+            ],
+            correct: 1,
+            explanation:
+              "The GET method is used in RESTful APIs to retrieve data, and including the product ID in the URL specifies the resource to fetch.",
+          },
+          {
+            question:
+              "A containerized application is consuming massive memory, causing\nperformance issues. What is the recommended approach to address this\nproblem effectively?",
+            options: [
+              "Increase the memory limit for the container",
+              "Use a larger base image for the container",
+              "Reduce the number of replicas of the container",
+              "Analyze the application code for memory leaks",
+            ],
+            correct: 3,
+            explanation:
+              "Memory issues are best resolved by identifying and fixing leaks in the application code rather than just increasing container resources.",
+          },
+          {
+            question:
+              "An internet connection is established by a user, connecting devices like\na computer, smartphone, and smart TV to a router. Which OSI model\nlayer is responsible for transmitting Ethernet, cable, and Wi-Fi\nsignals between these devices?",
+            options: [
+              "Physical Layer",
+              "Network Layer",
+              "Data Link Layer",
+              "Application Layer",
+            ],
+            correct: 0,
+            explanation:
+              "The Physical Layer handles the transmission of raw electrical, optical, or wireless signals over media like Ethernet cables and Wi-Fi.",
+          },
+          {
+            question:
+              "Your machine may need to request a list of employees from the South\nregion for an internal campaign. Which Excel formula will you use to\ngenerate this list dynamically from the dataset below?\n\nSample Dataset:\n\n---\n\nEmployee Department Role Salary Bonus Join Date Region\nName\n\n---\n\nE001 Alice Sales Manager 70000 5000 01-03-2018\n\nE002 Bob HR Executive 50000 3000 12-06-2019\n\nE003 Carol IT Developer 60000 4000 15-08-2020\n\nE004 David Marketing Analyst 55000 3500 22-01-2021\n\nE005 Eve Sales Executive 52000 2500 30-11-2019\n\n---",
+            options: [
+              '`=FILTER(A2:H6, H2:H6="South")`',
+              '`=VLOOKUP("South", H2:H6, 2, FALSE)`',
+              '`=INDEX(A2:A6, MATCH("South", H2:H6, 0))`',
+              '`=IF(H2:H6="South", A2:A6, "")`',
+            ],
+            correct: 0,
+            explanation:
+              'The FILTER function dynamically returns all rows where the Region column equals "South," generating the required list automatically.',
+          },
+          {
+            question:
+              "In a PivotTable, which feature allows you to create custom\ncalculations and summaries based on the existing data?",
+            options: [
+              "Calculated Fields",
+              "Calculated Items",
+              "Slicers",
+              "Grouping",
+            ],
+            correct: 0,
+            explanation:
+              "Calculated Fields let you define custom formulas in a PivotTable to perform calculations on the summarized data.",
+          },
+          {
+            question:
+              "Data packets are transmitted between routers and switches to ensure\nproper delivery across different network segments. Which OSI model\nlayer is responsible for establishing logical paths and routing data\npackets between different network segments?",
+            options: [
+              "Data Link Layer",
+              "Network Layer",
+              "Transport Layer",
+              "Session Layer",
+            ],
+            correct: 1,
+            explanation:
+              "The Network Layer determines logical addressing and routing to deliver packets across multiple network segments.",
+          },
+          {
+            question:
+              "In a cloud computing environment, which security measure helps protect\nuser accounts by requiring two different types of identification\nbefore granting access?",
+            options: [
+              "Firewalls",
+              "Encryption",
+              "Multi-Factor Authentication (MFA)",
+              "Antivirus Software",
+            ],
+            correct: 2,
+            explanation:
+              "MFA enhances account security by requiring multiple forms of verification, such as a password and a one-time code.",
+          },
+          {
+            question:
+              "A small business uses ring network topology. If a single workstation\ngoes down, what impact will it have on the network?",
+            options: [
+              "Minimal impact; network reroutes traffic",
+              "Network becomes isolated",
+              "Network slows down",
+              "Network breaks completely",
+            ],
+            correct: 3,
+            explanation:
+              "In a ring topology, each device is connected in a closed loop, so the failure of one workstation disrupts the **entire network**.",
+          },
+          {
+            question:
+              "What is the process of converting data into a secure format to\nprevent unauthorized access?",
+            options: [
+              "Encryption",
+              "Authentication",
+              "Authorization",
+              "Compression",
+            ],
+            correct: 0,
+            explanation:
+              "Encryption transforms data into a coded format to ensure that only authorized parties can access it.",
+          },
+          {
+            question:
+              "A mobile application sends data to a server using an API. The developer\ndecides to use the POST method for this operation. What is the primary\ncharacteristic of the POST method in this context?",
+            options: [
+              "It retrieves data from the server",
+              "It updates existing data on the server",
+              "It submits data to be processed by the server",
+              "It deletes data from the server",
+            ],
+            correct: 2,
+            explanation:
+              "The POST method is used to send data to the server for processing, often resulting in the creation of a new resource.",
+          },
+          {
+            question:
+              "A company needs to keep sensitive data on-premises while leveraging\ncloud resources for other operations. Which cloud deployment model\nshould be used?",
+            options: [
+              "Public Cloud",
+              "Private Cloud",
+              "Hybrid Cloud",
+              "Community Cloud",
+            ],
+            correct: 2,
+            explanation:
+              "A Hybrid Cloud combines on-premises infrastructure with cloud services, allowing sensitive data to remain local while using cloud resources for scalability.",
+          },
+          {
+            question:
+              "A network administrator wants to assign IP addresses dynamically to\ndevices in a network. Which protocol is used for this purpose?",
+            options: ["DNS", "DHCP", "ARP", "ICMP"],
+            correct: 1,
+            explanation:
+              "DHCP automatically assigns IP addresses and network configuration details to devices on a network.",
+          },
+          {
+            question:
+              "A startup is concerned about unpredictable expenses due to variable\ncloud usage. Which cloud feature should they implement to manage and\npredict costs more accurately?",
+            options: [
+              "Auto-scaling",
+              "Reserved instances",
+              "Load balancing",
+              "Content Delivery Network (CDN)",
+            ],
+            correct: 1,
+            explanation:
+              "Reserved instances provide predictable, discounted pricing by committing to usage over a fixed term, helping control costs.",
+          },
+          {
+            question:
+              "A company needs a security solution where the firewall acts as an\nintermediary, inspecting all incoming and outgoing traffic between the\nuser's device and the internet. Which type of firewall is most suitable\nfor this requirement?",
+            options: [
+              "Packet Filtering Firewall",
+              "Proxy Firewall",
+              "Circuit-Level Gateway",
+              "Application Firewall",
+            ],
+            correct: 1,
+            explanation:
+              "A proxy firewall sits between users and the internet, inspecting and filtering all traffic by acting as an intermediary.",
+          },
+          {
+            question:
+              "You are a network administrator for a company with several remote\noffices. The company wants to implement a VPN to provide secure remote\naccess to its internal network. Which VPN type is the best choice for\nthis scenario?",
+            options: ["PPTP", "L2TP", "SSL VPN", "IPSec VPN"],
+            correct: 2,
+            explanation:
+              "SSL VPNs provide secure remote access over the internet using a web browser and are ideal for remote users across multiple locations.",
+          },
+          {
+            question:
+              "Question:\n\nA team wants to improve deployment speed and reduce downtime\nwhen updating their containerized application. Which practice should\nthey adopt?",
+            options: [
+              "Use rolling updates with health checks",
+              "Increase the number of replicas",
+              "Disable the health checks",
+              "Use a larger base image",
+            ],
+            correct: 0,
+            explanation:
+              "Rolling updates with health checks update containers gradually, ensuring availability and minimizing downtime during deployments.",
+          },
+          {
+            question:
+              "Which cloud service model provides users with hardware resources\nsuch as virtual machines and storage?",
+            options: ["IaaS", "PaaS", "SaaS", "DaaS"],
+            correct: 0,
+            explanation:
+              "Infrastructure as a Service (IaaS) offers virtualized hardware resources like servers, storage, and networking.",
+          },
+          {
+            question:
+              "Your organization has decided to outsource antivirus management to a\nthird party. Which of the following tasks cannot be assigned to the\nthird party?",
+            options: [
+              "Monitoring of servers on your organization's premises",
+              "Preparing the internal antivirus policy for the systems",
+              "Rectification of virus infections on systems",
+              "Updating the antivirus definition files on user systems",
+            ],
+            correct: 1,
+            explanation:
+              "Defining internal security policies is a strategic responsibility of the organization and should not be outsourced to third parties.",
+          },
+          {
+            question:
+              "Google updates its website weekly by adding new features and fixing bugs\nusing an Agile development approach. After each update, the new\nversion is automatically deployed to the live environment. Which DevOps\npractice is being implemented to ensure rapid and frequent releases?",
+            options: [
+              "The practice involves automating the process of releasing software to",
+              "Continuous integration focuses on merging code changes regularly to",
+              "Continuous testing ensures that automated tests are run continuously",
+              "Monitoring involves tracking application performance and user",
+            ],
+            correct: 0,
+            explanation:
+              "Continuous Deployment automates frequent and reliable releases to production without manual intervention.",
+          },
+          {
+            question:
+              "What is the main purpose of network segmentation in security?",
+            options: [
+              "Increasing bandwidth",
+              "Improving signal strength",
+              "Limiting the spread of attacks",
+              "Reducing latency",
+            ],
+            correct: 2,
+            explanation:
+              "Network segmentation isolates network segments to prevent attackers from easily moving across the entire network.",
+          },
+          {
+            question:
+              "A development team is designing a new RESTful API to manage a\nproduct catalog. They need to create an endpoint that retrieves\ndetailed information about a specific product using its unique\nproduct ID. Which HTTP method and URL structure best align with RESTful\nprinciples?",
+            options: [
+              "POST /products/{id}/details",
+              "GET /product_details?id={id}",
+              "PUT /products/{id}/fetch",
+              "GET /products/{id}",
+            ],
+            correct: 3,
+            explanation:
+              "RESTful design uses the GET method to retrieve resources and identifies a specific resource through a clean, resource-based URL.",
+          },
+          {
+            question:
+              "Azure is migrating its legacy data sources to new cloud-based platforms\nwhile maintaining operations without downtime. During migration, data\nfrom both old and new systems must be accessed simultaneously for\nreal-time reporting and analytics, with logical integration and no\nphysical data movement. Which architectural layer best handles this\nrequirement while ensuring minimal disruption and secure access?",
+            options: [
+              "Connection layer using direct database access protocols",
+              "Consumption layer utilizing middleware with abstracted APIs",
+              "Abstraction layer that logically unifies disparate data sources",
+              "Data caching layer storing temporary data",
+            ],
+            correct: 2,
+            explanation:
+              "An abstraction (data virtualization) layer enables unified, real-time access to multiple data sources without physically moving the data.",
+          },
+          {
+            question:
+              "As part of a data center modernization initiative, the IoT team must\naddress storage challenges by leveraging existing storage devices from\nmultiple vendors and integrating them into a next-generation storage\nsolution. How does resource pooling play a crucial role in achieving\nelasticity in cloud storage?",
+            options: [
+              "By eliminating the need for server virtualization",
+              "By minimizing financial and contractual commitments",
+              "By ensuring a globally scalable and resilient storage solution",
+              "By optimizing capacity for executing code and running instances",
+            ],
+            correct: 2,
+            explanation:
+              "Resource pooling aggregates storage resources from different systems, enabling elastic scaling and high availability across the cloud environment.",
+          },
+          {
+            question:
+              "You are a software developer creating an application for a large\ncorporation. The application is expected to run on various computers\nwith different hardware and operating systems. Which operating\nsystem property is most important to ensure compatibility and smooth\noperation?",
+            options: [
+              "User Interface",
+              "Security",
+              "Device Management",
+              "Resource Allocation",
+            ],
+            correct: 2,
+            explanation:
+              "Device management ensures the OS can interface with different hardware components, allowing applications to run smoothly across diverse systems.",
+          },
+          {
+            question:
+              'A company migrates its application to a cloud computing environment.\nHow does the concept of "shared responsibility" impact security\nmanagement in this scenario?',
+            options: [
+              "The cloud provider handles all security measures",
+              "Security is managed by third-party auditors",
+              "Both the cloud provider and the customer share security",
+              "The customer is solely responsible for security",
+            ],
+            correct: 2,
+            explanation:
+              "In cloud computing, providers secure the infrastructure, while customers are responsible for securing their applications, data, and access.",
+          },
+          {
+            question:
+              "An embedded system encrypts data using a substitution cipher. After\ndeployment, some characters in the encrypted text are not correctly\ndecrypted. What is the most likely cause of this issue?",
+            options: [
+              "The decryption map incorrectly handles negative indices",
+              "The decryption process incorrectly uses the encryption key, leading",
+              "The encryption map creates duplicate character mappings",
+              "The length of the character string causes an incorrect modulo",
+            ],
+            correct: 1,
+            explanation:
+              "Using an incorrect key during decryption causes mismatched character mappings, resulting in incorrectly decrypted characters.",
+          },
+        ];
+        const SECONDS_PER_Q = 60;
+        const total = QUESTIONS.length;
+
+        // state
+        let current = 0;
+        let answers = new Array(total).fill(null); // selected option index or null
+        let flagged = new Array(total).fill(false);
+        let visited = new Array(total).fill(false);
+        let timeLeft = SECONDS_PER_Q;
+        let timerId = null;
+        let totalElapsed = 0;
+        let submitted = false;
+
+        // elements
+        const screenIntro = document.getElementById("screen-intro");
+        const screenQuiz = document.getElementById("screen-quiz");
+        const screenResults = document.getElementById("screen-results");
+
+        const factCount = document.getElementById("factCount");
+        const factTime = document.getElementById("factTime");
+        const startBtn = document.getElementById("startBtn");
+
+        const qCounter = document.getElementById("qCounter");
+        const qLabel = document.getElementById("qLabel");
+        const qText = document.getElementById("qText");
+        const optionsList = document.getElementById("optionsList");
+        const timerDisplay = document.getElementById("timerDisplay");
+        const progressFill = document.getElementById("progressFill");
+        const paletteGrid = document.getElementById("paletteGrid");
+        const flagBtn = document.getElementById("flagBtn");
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+
+        const retakeBtn = document.getElementById("retakeBtn");
+
+        function fmtTime(s) {
+          s = Math.max(0, Math.round(s));
+          const m = Math.floor(s / 60);
+          const sec = s % 60;
+          return (
+            String(m).padStart(2, "0") + ":" + String(sec).padStart(2, "0")
+          );
+        }
+
+        function fmtTimeLong(s) {
+          s = Math.max(0, Math.round(s));
+          const m = Math.floor(s / 60);
+          const sec = s % 60;
+          return m + ":" + String(sec).padStart(2, "0");
+        }
+
+        // init intro facts
+        factCount.textContent = total;
+        factTime.textContent = Math.round((total * SECONDS_PER_Q) / 60) + "m";
+
+        function buildPalette() {
+          paletteGrid.innerHTML = "";
+          for (let i = 0; i < total; i++) {
+            const node = document.createElement("div");
+            node.className = "pnode";
+            node.textContent = i + 1;
+            node.dataset.idx = i;
+            node.addEventListener("click", () => {
+              if (!submitted) {
+                goToQuestion(i);
+              }
+            });
+            paletteGrid.appendChild(node);
+          }
+          refreshPalette();
+        }
+
+        function refreshPalette() {
+          const nodes = paletteGrid.children;
+          for (let i = 0; i < total; i++) {
+            const n = nodes[i];
+            n.className = "pnode";
+            if (flagged[i]) n.classList.add("flagged");
+            else if (answers[i] !== null) n.classList.add("answered");
+            if (i === current) n.classList.add("current");
+          }
+        }
+
+        function renderQuestion() {
+          const q = QUESTIONS[current];
+          visited[current] = true;
+
+          qCounter.textContent = "Question " + (current + 1) + " of " + total;
+          qLabel.textContent =
+            "QUESTION " + String(current + 1).padStart(2, "0");
+          qText.textContent = q.question;
+          progressFill.style.width = (current / total) * 100 + "%";
+
+          optionsList.innerHTML = "";
+          q.options.forEach((opt, idx) => {
+            const row = document.createElement("label");
+            row.className =
+              "option" + (answers[current] === idx ? " selected" : "");
+            row.innerHTML =
+              '<input type="radio" name="opt">' +
+              '<span class="option-marker"></span>' +
+              '<span class="option-text"></span>';
+            row.querySelector(".option-text").textContent = opt;
+            row.addEventListener("click", () => selectOption(idx));
+            optionsList.appendChild(row);
+          });
+
+          flagBtn.classList.toggle("active", flagged[current]);
+          flagBtn.textContent = flagged[current]
+            ? "Marked for review"
+            : "Mark for review";
+
+          prevBtn.disabled = current === 0;
+          nextBtn.textContent = current === total - 1 ? "Submit" : "Next";
+
+          resetTimer();
+          refreshPalette();
+        }
+
+        function selectOption(idx) {
+          answers[current] = idx;
+          renderOptionsOnly();
+          refreshPalette();
+        }
+
+        function renderOptionsOnly() {
+          const rows = optionsList.children;
+          for (let i = 0; i < rows.length; i++) {
+            rows[i].classList.toggle("selected", answers[current] === i);
+          }
+        }
+
+        function resetTimer() {
+          clearInterval(timerId);
+          timeLeft = SECONDS_PER_Q;
+          updateTimerDisplay();
+          timerId = setInterval(tick, 1000);
+        }
+
+        function tick() {
+          timeLeft -= 1;
+          totalElapsed += 1;
+          updateTimerDisplay();
+          if (timeLeft <= 0) {
+            clearInterval(timerId);
+            advance();
+          }
+        }
+
+        function updateTimerDisplay() {
+          timerDisplay.textContent = fmtTime(timeLeft);
+          timerDisplay.classList.toggle("warn", timeLeft <= 10);
+        }
+
+        function goToQuestion(idx) {
+          // account elapsed time on current question before leaving
+          current = idx;
+          renderQuestion();
+        }
+
+        function advance() {
+          if (current < total - 1) {
+            goToQuestion(current + 1);
+          } else {
+            submitQuiz();
+          }
+        }
+
+        nextBtn.addEventListener("click", advance);
+        prevBtn.addEventListener("click", () => {
+          if (current > 0) goToQuestion(current - 1);
+        });
+        flagBtn.addEventListener("click", () => {
+          flagged[current] = !flagged[current];
+          flagBtn.classList.toggle("active", flagged[current]);
+          flagBtn.textContent = flagged[current]
+            ? "Marked for review"
+            : "Mark for review";
+          refreshPalette();
+        });
+
+        startBtn.addEventListener("click", () => {
+          screenIntro.classList.add("hidden");
+          screenQuiz.classList.remove("hidden");
+          buildPalette();
+          renderQuestion();
+        });
+
+        retakeBtn.addEventListener("click", () => {
+          current = 0;
+          answers = new Array(total).fill(null);
+          flagged = new Array(total).fill(false);
+          visited = new Array(total).fill(false);
+          timeLeft = SECONDS_PER_Q;
+          totalElapsed = 0;
+          submitted = false;
+          screenResults.classList.add("hidden");
+          screenIntro.classList.remove("hidden");
+        });
+
+        function submitQuiz() {
+          clearInterval(timerId);
+          submitted = true;
+          screenQuiz.classList.add("hidden");
+          screenResults.classList.remove("hidden");
+          renderResults();
+        }
+
+        function renderResults() {
+          let correct = 0,
+            wrong = 0,
+            skipped = 0;
+          const reviewList = document.getElementById("reviewList");
+          reviewList.innerHTML = "";
+
+          QUESTIONS.forEach((q, i) => {
+            const given = answers[i];
+            let status;
+            if (given === null) {
+              status = "skipped";
+              skipped++;
+            } else if (given === q.correct) {
+              status = "correct";
+              correct++;
+            } else {
+              status = "wrong";
+              wrong++;
+            }
+
+            const item = document.createElement("div");
+            item.className = "review-item " + status;
+
+            let html =
+              '<div class="review-q">' +
+              (i + 1) +
+              ". " +
+              escapeHtml(q.question) +
+              "</div>";
+            if (status !== "correct") {
+              if (given !== null) {
+                html +=
+                  '<div class="review-row"><span class="tag your">YOUR ANSWER</span><span>' +
+                  escapeHtml(q.options[given]) +
+                  "</span></div>";
+              } else {
+                html +=
+                  '<div class="review-row"><span class="tag your">YOUR ANSWER</span><span>Not answered</span></div>';
+              }
+            }
+            html +=
+              '<div class="review-row"><span class="tag correctans">CORRECT</span><span>' +
+              escapeHtml(q.options[q.correct]) +
+              "</span></div>";
+            if (q.explanation) {
+              html +=
+                '<div class="review-explain">' +
+                escapeHtml(q.explanation) +
+                "</div>";
+            }
+            item.innerHTML = html;
+            reviewList.appendChild(item);
+          });
+
+          const pct = Math.round((correct / total) * 100);
+          const scorePct = document.getElementById("scorePct");
+          scorePct.textContent = pct + "%";
+          scorePct.classList.remove("pass", "fail");
+          scorePct.classList.add(pct >= 60 ? "pass" : "fail");
+
+          document.getElementById("verdictText").textContent =
+            pct >= 60 ? "Passed" : "Not passed";
+          document.getElementById("scoreSub").textContent =
+            correct + " of " + total + " correct — 60% needed to pass";
+
+          document.getElementById("statCorrect").textContent = correct;
+          document.getElementById("statWrong").textContent = wrong;
+          document.getElementById("statSkipped").textContent = skipped;
+          document.getElementById("statTime").textContent =
+            fmtTimeLong(totalElapsed);
+        }
+
+        function escapeHtml(str) {
+          const div = document.createElement("div");
+          div.textContent = str;
+          return div.innerHTML;
+        }
+      })();
+    </script>
+  </body>
+</html>
